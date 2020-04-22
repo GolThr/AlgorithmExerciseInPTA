@@ -2,10 +2,10 @@
 #include<stdlib.h>
 typedef  int  KeyType;
 typedef  struct {                      
-  KeyType *elem; /*elem[0]р╩╟ЦвВиз╠Ь╩Р╩╨ЁЕгЬ*/                       
+  KeyType *elem; /*elem[0]Д╦─Х┬╛Д╫°Е⌠╗Е┘╣Ф┬√Г╪⌠Е├╡Е▄╨*/                       
   int Length;      
 }SqList;
-void  CreatSqList(SqList *L);/*╢ЩеепРап╫╗а╒ё╛си╡цепй╣ожё╛о╦╫з╡╩╠М*/ 
+void  CreatSqList(SqList *L);/*Е╬┘Ф▌▓Е╨▐Е┬≈Е╩╨Г╚▀О╪▄Г■╠Хё│Е┬╓Е╝·Г▌╟О╪▄Г╩├Х┼┌Д╦█Х║╗*/ 
 void  SelectSort(SqList L);
 int main()
 {
@@ -17,11 +17,9 @@ int main()
    {		
      printf("%d ",L.elem[i]);
    }
-   printf("\n\n");
-   system("pause");
   return 0;
 }
-void  CreatSqList(SqList *L){/*╢ЩеепРап╫╗а╒ё╛си╡цепй╣ожё╛о╦╫з╡╩╠М*/ 
+void  CreatSqList(SqList *L){/*Е╬┘Ф▌▓Е╨▐Е┬≈Е╩╨Г╚▀О╪▄Г■╠Хё│Е┬╓Е╝·Г▌╟О╪▄Г╩├Х┼┌Д╦█Х║╗*/ 
   int n, i;
   scanf("%d", &n);
   L -> Length = n;
@@ -30,7 +28,7 @@ void  CreatSqList(SqList *L){/*╢ЩеепРап╫╗а╒ё╛си╡цепй╣ожё╛о╦╫з╡╩╠М*/
     scanf("%d", &(L -> elem[i]));
   }
 }
-/*дЦ╣д╢ЗбК╫╚╠╩г╤тзуБюО */
+/*Д╫═Г └Д╩ёГ═│Е╟├Х╒╚Е╣▄Е°╗Х©≥И┤▄ */
 void  SelectSort(SqList L){
   int i, j, min;
   KeyType t;
