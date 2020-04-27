@@ -32,7 +32,7 @@ int main()
 List ReadInput(){ /* 裁判实现，细节不表。元素从下标1开始存储 */
     int n, i;
     scanf("%d", &n);
-    List l;
+    List l = (List)malloc(sizeof(List));
     for(i = 1; i <= n; i++){
         scanf("%d", &(l -> Data[i]));
     }
@@ -53,5 +53,10 @@ Position BinarySearch( List L, ElementType X ){
             return p;
         }
     }
-    return 0;
+    if(X == L -> Data[s]){
+        return s;
+    }else if(X == L -> Data[e]){
+        return e;
+    }
+    return NotFound;    // 测试点1和6
 }
