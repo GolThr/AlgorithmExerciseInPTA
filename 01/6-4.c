@@ -32,41 +32,71 @@ int main()
 }
 
 Graph ReadG(){
-    // 采用邻接表方式存储
+    //采用邻接表方式存储
+    int a, b, i;
     Graph G = (Graph)malloc(sizeof(Graph));
-    int i;
-    Vertex s, e;
-    scanf("%d%d", &(G -> NumOfVertices), &(G -> NumOfEdges));
-    PtrToVNode* arr[G -> NumOfVertices];
-    for(i = 0; i < G -> NumOfVertices; i++){
-        arr[i] = 0;
+    scanf("%d%d", &G -> NumOfVertices, &G -> NumOfEdges);
+    G -> Array = (PtrToVNode*)malloc(sizeof(PtrToVNode) * G -> NumOfVertices);
+    for(i = 0; i < G -> NumOfVertices; i++) {
+        G -> Array[i] = 0;
     }
-    G -> Array = arr;
-    for(i = 0; i < G -> NumOfEdges; i++){
-        scanf("%d%d", &s, &e);
-        PtrToVNode v = (PtrToVNode)malloc(sizeof(PtrToVNode));
-        v -> Vert = e;
-        v -> Next = 0;
-        if(G -> Array[s]){
-            PtrToVNode vn = G -> Array[s];
-            while(vn -> Next){
-                vn = vn -> Next;
-            }
-            vn -> Next = v;
-        }else{
-            G -> Array[s] = v;
-        }
+    for(i = 0; i < G -> NumOfEdges; i++) {
+        scanf("%d%d", &a, &b);
+        PtrToVNode p = (PtrToVNode)malloc(sizeof(PtrToVNode));
+        p -> Vert = b;
+        p -> Next = G -> Array[a];
+        G -> Array[a] = p;
     }
     return G;
 }
 /* Your function will be put here */
 void StronglyConnectedComponents(Graph G, void (*visit)(Vertex V)){
-    PtrToVNode * v = G -> Array;
-    Vertex s = v -> Vert;
-    visit(s);
-    while(vn -> Next != NULL || vn -> Next -> Vert != s){
-        vn = vn -> Next;
-        visit(vn -> Vert);
+    int vertn = G -> NumOfVertices;
+    int reached[vertn][vertn];
+    int visited[vertn];
+    int i, j, k;
+    
+    for(i = 0; i < vertn; i++){
+        visited[i] = 0;
+        for(j = 0; j < vertn; j++){
+            reached[i][j] = 0;
+        }
     }
-    printf("\n");
+
+    //邻接矩阵
+    for(i = 0; i < vertn; i++){
+        PtrToVNode vnode = G -> Array[i];
+        if(vnode){
+            reached[i][vnode -> Vert] = 1;
+            while(vnode -> Next){
+                vnode = vnode -> Next;
+                reached[i][vnode -> Vert] = 1;
+            }
+        }
+    }
+
+    //可达矩阵
+    for(k = 0; k < vertn; k++){ //对每个中间节点
+        for(i = 0; i < vertn; i++){
+            for(j = 0; j < vertn; j++){
+                if(reached[i][k] && reached[k][j]){
+                    reached[i][j] = 1;
+                }
+            }
+        }
+    }
+
+    for(i = 0; i < vertn; i++){
+        if(!visited[i]){
+            visit(i);
+            visited[i] = 1;
+            for(j = 0; j < vertn; j++){
+                if(!visited[j] && reached[i][j] && reached[j][i]){
+                    visit(j);
+                    visited[j] = 1;
+                }
+            }
+            printf("\n");
+        }
+    }
 }
