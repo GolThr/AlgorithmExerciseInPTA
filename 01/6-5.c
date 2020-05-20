@@ -32,83 +32,91 @@ int main()
     LGraph G = ReadG();
     printf("%d\n", CountConnectedComponents(G));
 
+    printf("\n\n");
+    system("pause");
     return 0;
 }
 
 LGraph ReadG(){
     //采用邻接表方式存储
     int a, b, i;
-    LGraph G = (LGraph)malloc(sizeof(LGraph));
-    scanf("%d%d", &G -> Nv, &G -> Ne);
-    for(i = 0; i < G -> Nv; i++) {
-        G -> G[i].FirstEdge = 0;
+    LGraph Graph = (LGraph)malloc(sizeof(struct GNode));
+    scanf("%d%d", &Graph -> Nv, &Graph -> Ne);
+    for(i = 0; i < Graph -> Nv; i++) {
+        PtrToAdjVNode t = (PtrToAdjVNode)malloc(sizeof(struct AdjVNode));
+        t -> AdjV = i;
+        t -> Next = 0;
+        Graph -> G[i].FirstEdge = t;
     }
-    for(i = 0; i < G -> Ne; i++) {
+    for(i = 0; i < Graph -> Ne; i++) {
         scanf("%d%d", &a, &b);
-        PtrToAdjVNode p = (PtrToAdjVNode)malloc(sizeof(PtrToAdjVNode));
-        p -> AdjV = b;
-        p -> Next = G -> G[a].FirstEdge;
-        G -> G[a].FirstEdge = p;
+        PtrToAdjVNode p1 = (PtrToAdjVNode)malloc(sizeof(struct AdjVNode));
+        p1 -> AdjV = b;
+        p1 -> Next = Graph -> G[a].FirstEdge;
+        Graph -> G[a].FirstEdge = p1;
+        PtrToAdjVNode p2 = (PtrToAdjVNode)malloc(sizeof(struct AdjVNode));
+        p2 -> AdjV = a;
+        p2 -> Next = Graph -> G[b].FirstEdge;
+        Graph -> G[b].FirstEdge = p2;
     }
-    return G;
+    return Graph;
 }
 
 /* Your function will be put here */
+int CountConnectedComponents(LGraph Graph){
+	int Count = 0, Front = 0, Rear = 0;
+	Vertex Visit[MaxVertexNum] = { 0 };
+	Vertex Queue[MaxVertexNum] = { 0 };
+	Vertex V;
+	for(int i=0; i<Graph->Nv; i++)
+		if (!Visit[i]) {
+			Queue[Front] = i;
+			Visit[i] = 1;
+			while (Front <= Rear) {
+				PtrToAdjVNode Ptr = Graph->G[Queue[Front]].FirstEdge;
+				for (; Ptr != NULL; Ptr = Ptr->Next)
+					if (!Visit[Ptr->AdjV]) {
+						Queue[++Rear] = Ptr->AdjV;
+						Visit[Ptr->AdjV] = 1;
+					}
+				Front++;
+			}
+			Count++;
+			Rear=Front;
+		}
+	return Count;
+}
+
+/*
 int CountConnectedComponents( LGraph Graph ){
-    int i, j, k, cnt = 0;
-    int vn = Graph -> Nv;
-    int reached[vn][vn];
-    int visited[vn];
-
-    for(i = 0; i < vn; i++){
-        visited[i] = 0;
-        for(j = 0; j < vn; j++){
-            reached[i][j] = 0;
-        }
-    }
-
-    //邻接矩阵
-    for(i = 0; i < vn; i++){
-        PtrToAdjVNode ptr = Graph -> G[i].FirstEdge;
-        if(!ptr){
-            reached[i][ptr -> AdjV] = 1;
-            reached[ptr -> AdjV][i] = 1;
-            while(!ptr -> Next){
-                ptr = ptr -> Next;
-                reached[i][ptr -> AdjV] = 1;
-                reached[ptr -> AdjV][i] = 1;
-            }
-        }
-    }
-
-    for(i = 0; i < vn; i++){
-        for(j = 0; j < vn; j++){
-            printf("%d ", reached[i][j]);
-        }
-        printf("\n");
-    }
-
-    //可达矩阵
-    for(k = 0; k < vn; k++){ //对每个中间节点
-        for(i = 0; i < vn; i++){
-            for(j = 0; j < vn; j++){
-                if(reached[i][k] && reached[k][j]){
-                    reached[i][j] = 1;
-                }
-            }
-        }
-    }
-
-    for(i = 0; i < vn; i++){
+    Vertex QUE[10] = {0};
+    PtrToAdjVNode p;
+    int visited[MaxVertexNum] = {0};
+    int front = 0, rear = 0, i, cnt = 0;
+    
+    for(i = 0; i < Graph -> Nv; i++){
         if(!visited[i]){
+            QUE[rear++] = i;
             visited[i] = 1;
-            for(j = 0; j < vn; j++){
-                if(!visited[j] && reached[i][j] && reached[j][i]){
-                    visited[j] = 1;
-                }
-            }
             cnt++;
         }
+        while(front != rear){
+            p = Graph -> G[QUE[front++]].FirstEdge;
+            if(!visited[p -> AdjV]){
+                QUE[rear++] = p -> AdjV;
+                visited[p -> AdjV] = 1;
+            }
+            while(p -> Next){
+                if(!visited[p -> Next -> AdjV]){
+                    QUE[rear++] = p -> Next -> AdjV;
+                    visited[p -> Next -> AdjV] = 1;
+                }
+                p = p -> Next;
+            }
+        }
+        front = rear = 0;
     }
-    printf("%d", cnt);
+
+    return cnt;
 }
+*/
