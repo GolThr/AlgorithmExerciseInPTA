@@ -13,6 +13,7 @@ class BigInteger{
 };
 
 void add_on(int * r, int p, int n){
+    //以下标p为起始位置，将n累加到数组r
     int jin = n, t;
     while(jin != 0){
         t = r[p] + jin;
