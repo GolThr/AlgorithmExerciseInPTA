@@ -1,5 +1,5 @@
 #include <iostream>
-#include <stdlib.h>
+#include <algorithm>
 using namespace std;
 
 int main(){
@@ -41,48 +41,19 @@ int main(){
         }
     }else{
         cout << "Merge Sort" << endl;
-        for(; j < n; j += 2){
-            for(k = 1, t = 1; k < n; k++){
-                if(b[k] >= b[k - 1]){
-                    t++;
-                }else{
-                    if(t != j){
-                        break;
-                    }
-                    t = 1;
-                }
-            }
-            if(k >= n){
+        for(i = j, t = 1; i < n - 1; i++){
+            if(b[i] < b[i +1]){
+                t++;
+            }else{
                 break;
             }
         }
-        k = 0;
-        l = k + 2 * j;
-        while(l <= n){
-            for(i = k; i < l; i++){
-                for(p = i + 1, min = i; p < l; p++){
-                    if(b[p] < b[min]){
-                        min = p;
-                    }
-                }
-                t = b[min];
-                b[min] = b[i];
-                b[i] = t;
-            }
-            k += l;
-            l = k + 2 * j;
+        l = j < t ? j : t;
+        for(i = 0; (i + l * 2) <= n; i += l * 2){
+            sort(b + i, b + i + l * 2);
         }
-        if(k < n){
-            for(i = k; i < n; i++){
-                for(p = i + 1, min = i; p < n; p++){
-                    if(b[p] < b[min]){
-                        min = p;
-                    }
-                }
-                t = b[min];
-                b[min] = b[i];
-                b[i] = t;
-            }
+        if(i < n){
+            sort(b + i, b + n);
         }
         cout << b[0];
         for(i = 1; i < n; i++){
@@ -90,6 +61,5 @@ int main(){
         }
     }
 
-    system("pause");
     return 0;
 }
