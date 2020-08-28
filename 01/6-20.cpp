@@ -42,48 +42,43 @@ int main() {
     return 0;
 }
 /* 你的代码将被嵌在这里 */
-int p = 0;
-
-void Coding(HuffmanTree HT, HuffmanCode &HC, int s){
-    if(s != 0){
-        if(HT[s].lchild == 0 && HT[s].rchild == 0){
-            printf("\n");
-        }
-        printf("0");
-        Coding(HT, HC, HT[s].lchild);
-        printf("1");
-        Coding(HT, HC, HT[s].rchild);
-    }
+void reverse(char * CH){
+	int n = strlen(CH);
+	int i;
+	char temp;
+	for(i = 0; i < n / 2; i++){
+		temp = CH[i];
+		CH[i] = CH[n - i - 1];
+		CH[n - i - 1] = temp;
+	}
 }
 
 void SelectTwoMin(int upbound, HuffmanTree HT, int &s1, int &s2){
-    int i, mina = 0, minb = 0;
+    int i, mina = 0, minb = 0, minwa = 1000, minwb = 1000;
     for(i = 1; i < upbound; i++){
-        if(HT[i].weight < HT[mina].weight){
+        if(HT[i].weight < minwa){
             if(HT[i].parent == 0){
                 minb = mina;
+                minwb = minwa;
                 mina = i;
+                minwa = HT[i].weight;
             }
-        }else if(HT[i].weight > HT[mina].weight){
+        }else if(HT[i].weight < minwb){
             if(HT[i].parent == 0){
                 minb = i;
+                minwb = HT[i].weight;
             }
         }
     }
-    if(mina < minb){
-        s1 = mina;
-        s2 = minb;
-    }else{
-        s1 = minb;
-        s2 = mina;
-    }
+    // 无需判断大小！！
+    s1 = mina;
+    s2 = minb;
 }
 
 void HuffmanCoding(HuffmanTree &HT, HuffmanCode &HC, int *w, int n){
     HT = (HuffmanTree)malloc(sizeof(HTNode) * (2 * n));
     HC = (char **)malloc(sizeof(char *) * (n + 1));
     int i, j, s1, s2;
-    string str = "";
     for(int i=1;i<=n;i++){
     	HC[i] = (char *)malloc(sizeof(char) * (n + 1));
 		memset(HC[i], 0, sizeof(char) * (n + 1));
@@ -106,5 +101,18 @@ void HuffmanCoding(HuffmanTree &HT, HuffmanCode &HC, int *w, int n){
         HT[s2].parent = n + i + 1;
     }
     //Coding
-    Coding(HT, HC, 2 * n - 1);
+	for(i = 1; i <= n; i++){
+        int c = i;
+        int parent = HT[c].parent;
+        while(parent != 0){
+            if(HT[parent].lchild == c){
+                strncat(HC[i], "0", 1);
+            }else{
+            	strncat(HC[i], "1", 1);
+			}
+	        c = parent;
+	        parent = HT[parent].parent;
+	    }
+	    reverse(HC[i]);
+    }
 }
