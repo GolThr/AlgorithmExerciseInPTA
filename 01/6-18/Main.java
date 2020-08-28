@@ -11,40 +11,55 @@ class CommonOrder {
         s3=new StringBuffer();
     }		
     
-    public void subsequenceOrder() {
-        int i = 0, j = 0, top = 0;
-        int s[] = new int[s1.length() + s2.length()];
-        int c[][] = new int[s1.length() + 1][s2.length() + 1];
-        int b[][] = new int[s1.length() + 1][s2.length() + 1];
-        for(i = 1; i <= s1.length(); i++){
-            for(j = 1; j <= s2.length(); j++){
-                if(s1.charAt(i - 1) == s2.charAt(j - 1)){
-                    c[i][j] = c[i - 1][j - 1] + 1;
-                    b[i][j] = 1;
-                }else if(c[i - 1][j] >= c[i][j - 1]){
-                    c[i][j] = c[i - 1][j];
-                    b[i][j] = 2;
+    /* 你编写的subsequenceOrder()函数的代码将被嵌在这里  */
+    void subsequenceOrder(){
+        String x = new String(s2);
+        String y = new String(s1);
+        int m = x.length();
+        int n = y.length();
+        int[][] c = new int[m+1][n+1];
+
+        for (int i = 0; i < m+1; i++) {
+            c[i][0] = 0;
+        }
+        for (int i = 0; i < n+1; i++) {
+            c[0][i] = 0;
+        }
+
+        int[][] path = new int[m+1][n+1];
+        for (int i = 1; i < m+1; i++) {
+            for (int j = 1; j < n+1; j++) {
+                if(x.charAt(i-1) == y.charAt(j-1)){
+                    c[i][j] = c[i-1][j-1] + 1;
+                }else if(c[i-1][j] >= c[i][j-1]){
+                    c[i][j] = c[i-1][j];
+                    path[i][j] = 1;
                 }else{
-                    c[i][j] = c[i][j - 1];
-                    b[i][j] = 3;
+                    c[i][j] = c[i][j-1];
+                    path[i][j] = -1;
                 }
             }
         }
-        i = s1.length(); j = s2.length();
-        while(b[i][j] != 0){
-            if(b[i][j] == 2){
-                i--;
-            }else if(b[i][j] == 3){
-                j--;
-            }else if(b[i][j] == 1){
-                s[top++] = i - 1;
-                i--; j--;
-            }
+        PrintLCS(path,x,m,n);
+    }
+
+
+    public static void PrintLCS(int[][]b,String x,int i,int j){
+        if(i == 0 || j == 0){
+            return;
         }
-        while(top != 0){
-            s3.append(s1.charAt(s[--top]));
+
+        if(b[i][j] == 0){
+            PrintLCS(b,x,i-1,j-1);
+            s3.append(x.charAt(i-1));
+            //System.out.printf("%c",x.charAt(i-1));
+        }else if(b[i][j] == 1){
+            PrintLCS(b,x,i-1,j);
+        }else{
+            PrintLCS(b,x,i,j-1);
         }
     }
+    /*************************************************/
 
     StringBuffer getCommonString(){
         return s3;
